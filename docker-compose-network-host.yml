@@ -1,0 +1,51 @@
+version: '2'
+services:
+
+  consulserver1:
+    image: consul
+    network_mode: host
+    ports:
+      - "8300:8300"
+      - "8301:8301"
+      - "8302:8302"
+      - "8400:8400"
+      - "8500:8500"
+      - "53:8600"
+    environment:
+      - 'CONSUL_LOCAL_CONFIG={"skip_leave_on_interrupt": true}'
+      - CONSUL_BIND_INTERFACE=eth0
+#    command: agent -server -bind=192.168.99.100 -bootstrap-expect 1 -ui
+    expose:
+      - "8500"
+
+#  httpdservice:
+#    build: ./httpd
+#    hostname: httpdservice
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    expose:
+#      - "80"
+#      - "443"
+#    links:
+#      - consulserver1
+#      - tomcatservice1
+#
+  tomcatservice1:
+    build: ./tomcat
+    network_mode: host
+    command: /entrypoint.sh
+    environment:
+      - CONSUL_HTTP_ADDR=192.168.99.100:8500
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+
+  registratorservice:
+    image: gliderlabs/registrator
+    network_mode: host
+    command: -retry-attempts 10 -retry-interval 1000 consul://localhost:8500
+    hostname: registratorservice
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock

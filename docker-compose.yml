@@ -1,0 +1,79 @@
+version: '2'
+services:
+
+  consulserver1:
+    image: consul
+    ports:
+      - "8300:8300"
+      - "8301:8301"
+      - "8302:8302"
+      - "8400:8400"
+      - "8500:8500"
+      - "53:8600"
+    environment:
+      - 'CONSUL_LOCAL_CONFIG={"skip_leave_on_interrupt": true}'
+#    command: agent -server -bind=192.168.99.100 -bootstrap-expect 1 -ui
+    expose:
+      - "8500"
+
+  httpdservice:
+    build: ./httpd
+    hostname: httpdservice
+    environment:
+      - CONSUL_HTTP_ADDR=consulserver1:8500
+    ports:
+      - "80:80"
+      - "443:443"
+    expose:
+      - "80"
+      - "443"
+    links:
+      - consulserver1
+      - tomcatservice1
+      - tomcatservice2
+
+  tomcatservice1:
+    build: ./tomcat
+    hostname: tomcatservice1
+    command: /entrypoint.sh
+    environment:
+      - CONSUL_HTTP_ADDR=consulserver1:8500
+      - SERVICE_TAGS=tomcatcluster
+      - SERVICE_NAME=tomcatservice1
+      - SERVICE_8080_IGNORE=true
+    ports:
+      - "8180:8080"
+      - "8109:8009"
+    expose:
+      - "8080"
+      - "8009"
+    links:
+      - consulserver1
+
+  tomcatservice2:
+    build: ./tomcat
+    hostname: tomcatservice2
+    command: /entrypoint.sh
+    environment:
+      - CONSUL_HTTP_ADDR=consulserver1:8500
+      - SERVICE_TAGS=tomcatcluster
+      - SERVICE_NAME=tomcatservice2
+      - SERVICE_8080_IGNORE=true
+    ports:
+      - "8280:8080"
+      - "8209:8009"
+    expose:
+      - "8080"
+      - "8009"
+    links:
+      - consulserver1
+
+  registratorservice:
+    image: gliderlabs/registrator
+    command: -retry-attempts 10 -retry-interval 1000 consul://consulserver1:8500
+    hostname: registratorservice
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    links:
+      - consulserver1
+
