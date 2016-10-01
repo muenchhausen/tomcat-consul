@@ -5,6 +5,8 @@ The main subject under test&sample is [consul-template](https://github.com/hashi
 
 Here we use [Apache httpd](http://httpd.apache.org/) as a reverse proxy for load balancing. Why? It is since 1996 the most popular WebServer and it works fine :)
 
+Feel free to compare this consul sample with my [tomcat-confd](https://github.com/muenchhausen/tomcat-confd/) sample.
+
 ## what is this sample doing?
 Apache Tomcat uses config files e.g. ```tomcat-users.xml``` to define access rights to the manager webapp or ```server.xml``` to define connectors. Some parameters shall be configured centrally, so we can change them within consul. Next you find all available settings.
 
@@ -70,6 +72,6 @@ docker-compose stop && docker-compose rm -f && docker-compose build && docker-co
 ```
 
 ## Credits
-https://github.com/Neil-Ni/consul-demo
-https://github.com/bdclark/docker-tomcat-consul
+- https://github.com/Neil-Ni/consul-demo
+- https://github.com/bdclark/docker-tomcat-consul
 
