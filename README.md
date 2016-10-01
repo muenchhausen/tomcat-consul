@@ -6,7 +6,7 @@ The main subject under test&sample is [consul-template](https://github.com/hashi
 Here we use [Apache httpd](http://httpd.apache.org/) as a reverse proxy for load balancing. Why? It is since 1996 the most popular WebServer and it works fine :)
 
 ## what is this sample doing?
-Apache Tomcat uses config files e.g. ```tomcat-users.xml``` to define access rights to the manager webapp or ```server.xml``` to define connectors. Here the admin credentials shall be configured centrally, so we can change them within consul.
+Apache Tomcat uses config files e.g. ```tomcat-users.xml``` to define access rights to the manager webapp or ```server.xml``` to define connectors. Some parameters shall be configured centrally, so we can change them within consul. Next you find all available settings.
 
 
 ## Consul Key-Value 
@@ -30,12 +30,17 @@ server.xml settings                   | description
 
 
 ## Test in Browser
-http://192.168.99.100:8500/ui/
-http://192.168.99.100:8080/examples/jsp/
-http://192.168.99.100/server-status/
-http://192.168.99.100/balancer-manager
-http://192.168.99.100/examples/jsp/
 
+Access Consul
+- http://192.168.99.100:8500/ui/
+
+Access Apache HTTPD
+- http://192.168.99.100/server-status/
+- http://192.168.99.100/balancer-manager
+
+Access Tomcat directly and behind the reverse proxy
+- http://192.168.99.100:8180/examples/jsp/
+- http://192.168.99.100/examples/jsp/
 
 ## some interesting code snippets
 
@@ -52,7 +57,7 @@ curl -X PUT -d "tomcat,manager-gui" http://192.168.99.100:8500/v1/kv/tomcat/user
 
 read values
 ```
-Browser 
+Open Browser 
 http://192.168.99.100:8500/v1/kv/?recurse
 http://192.168.99.100:8500/v1/kv/tomcat/maxThreads?raw
 
