@@ -42,6 +42,7 @@ Access Apache HTTPD
 - http://192.168.99.100/balancer-manager
 
 Access Tomcat directly and behind the reverse proxy
+- http://192.168.99.100/examples/servlets/servlet/SessionExample
 - http://192.168.99.100:8180/examples/jsp/
 - http://192.168.99.100/examples/jsp/
 
