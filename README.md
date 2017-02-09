@@ -35,6 +35,7 @@ server.xml settings                   | description
 
 Access Consul
 - http://192.168.99.100:8500/ui/
+- http://192.168.99.100:8500/v1/catalog/services
 
 Access Apache HTTPD
 - http://192.168.99.100/server-status/
